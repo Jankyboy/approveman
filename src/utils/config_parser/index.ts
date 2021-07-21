@@ -8,10 +8,10 @@ import { getDefaultOwnershipRules } from "./default";
 import { parseOwnershipRules } from "./parser";
 
 export const getOwnershipRules = async (
-  context: Context | null,
+  context: Context<"pull_request.opened" | "pull_request.reopened" | "pull_request.synchronize"> | null,
 ): Promise<OwnershipRules> => {
   const config = await context?.config("approveman.yml");
-  context?.log.info(`Found config: ${JSON.stringify(config)}`);
+  context?.log.trace(`Found config: ${JSON.stringify(config)}`);
   /* eslint-disable */
   if (config !== null && config !== undefined) {
     /* eslint-enable */

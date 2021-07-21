@@ -7,15 +7,15 @@ import { Context } from "probot";
  *
  * @param context The Probot context
  */
-export const getChangedFiles = async (context: Context): Promise<string[]> => {
+export const getChangedFiles = async (context: Context<"pull_request.opened" | "pull_request.reopened" | "pull_request.synchronize">): Promise<string[]> => {
   const req = context.repo({
     "pull_number": context.payload.pull_request.number,
   });
-  const changedFilesResponse = await context.github.pulls.listFiles(req);
+  const changedFilesResponse = await context.octokit.pulls.listFiles(req);
   const changedFiles: string[] = [];
   for (const changedFileData of changedFilesResponse.data) {
     changedFiles.push(changedFileData.filename);
   }
-  context.log.info(`Changed files are: ${JSON.stringify(changedFiles)}`);
+  context.log.trace(`Changed files are: ${JSON.stringify(changedFiles)}`);
   return changedFiles;
 };
